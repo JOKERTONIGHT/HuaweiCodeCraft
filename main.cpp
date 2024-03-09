@@ -94,3 +94,21 @@ int main()
 
     return 0;
 }
+
+void search(){
+    int x = 0, y = 0;
+    for(int i = 1; i <= n; i ++)
+        for(int j = 1; j <= n; j ++)
+            if(ch[i][j] == 'G')
+                gds[x][y] = 1;
+    for(int i = 0; i < robot_num; i ++)
+    {
+        int x = robot[i].x, y = robot[i].y;
+        if(gds[x][y])
+        {
+            robot[i].status = 1;
+            robot[i].mbx = x;
+            robot[i].mby = y;
+        }
+    }
+}
