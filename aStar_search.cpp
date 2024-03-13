@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <iostream>
 #include <queue>
 #include <stack>
@@ -94,4 +95,15 @@ int Robot::aStar_search(){
         }
     }
     return -1;
+}
+
+//to do: implement the function to control the robot
+void controlRobot(Robot& robot){
+    if(robot.path.empty()){
+        robot.aStar_search();
+    }else{
+        int d = robot.path.top();
+        robot.path.pop();
+        printf("%d", d);
+    }
 }
