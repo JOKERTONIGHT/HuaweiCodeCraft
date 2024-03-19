@@ -5,11 +5,14 @@
 #include <vector>
 #include <climits>
 #include <cmath>
+#include <fstream>
+#include <chrono>
+#include <thread>
 using namespace std;
 
 const int MAX_SIZE = 200;
 const int INF = INT_MAX;
-char map[MAX_SIZE][MAX_SIZE];
+char map[MAX_SIZE][MAX_SIZE] = {};
 
 class Robot{
 public:
@@ -26,7 +29,6 @@ public:
 
     
     int heuristic(int mx, int my){
-        if(map[mx][my] == '#') return INF;
         return abs(mx - gx) + abs(my - gy);
     }
     int aStar_search();
@@ -58,9 +60,10 @@ int Robot::aStar_search(){
     while(!pq.empty()){
         pair<int, pair<int, int> > top = pq.top();
         pq.pop();
-        int d = top.first - heuristic(top.second.first, top.second.second);
         int u = top.second.first;
         int v = top.second.second;
+        int d = top.first - heuristic(u, v);
+        
         if(u == gx && v == gy){
             int p = pre[u][v];
             while(p != -1){
@@ -70,13 +73,14 @@ int Robot::aStar_search(){
                     if(py < v) path.push(0);
                     else path.push(1);
                 }else{
-                    if(px < u) path.push(2);
-                    else path.push(3);
+                    if(px < u) path.push(3);
+                    else path.push(2);
                 }
                 u = px;
                 v = py;
                 p = pre[u][v];
             }
+            cout << "Path found! :)" << endl;
             return d;
         }
         if(visited[u][v]) continue;
@@ -84,7 +88,7 @@ int Robot::aStar_search(){
         for(int i = 0; i < 4; i++){
             int ux = u + dx[i];
             int vy = v + dy[i];
-            if(ux >= 0 && ux < MAX_SIZE && vy >= 0 && vy < MAX_SIZE && !visited[ux][vy] && map[ux][vy] != '#'){
+            if(ux >= 0 && ux < MAX_SIZE && vy >= 0 && vy < MAX_SIZE && !visited[ux][vy] && map[ux][vy] == '.'){
                 int newCost = d + 1;
                 if(cost[ux][vy] > newCost){
                     cost[ux][vy] = newCost;
@@ -94,16 +98,77 @@ int Robot::aStar_search(){
             }
         }
     }
+    cout << "The target is unreachable! :(" << endl;
     return -1;
 }
 
 //to do: implement the function to control the robot
+// void controlRobot(Robot& robot){
+//     if(robot.path.empty()){
+//         robot.aStar_search();
+//     }else{
+//         int d = robot.path.top();
+//         robot.path.pop();
+//         printf("%d", d);
+//     }
+// }
+
+//print the path
 void controlRobot(Robot& robot){
-    if(robot.path.empty()){
-        robot.aStar_search();
-    }else{
+    while(!robot.path.empty()){
         int d = robot.path.top();
         robot.path.pop();
         printf("%d", d);
     }
+}
+
+int main()
+{
+    Robot robot;
+    robot.x = 36;
+    robot.y = 173;
+    robot.gx = 137;
+    robot.gy = 117;
+
+    //read the map from a .txt file
+    ifstream file("map1.txt"); // 假设文件名为"data.txt"
+    if (!file.is_open()) {
+        cerr << "无法打开文件！" << endl;
+        return -1;
+    }
+
+    int row = 0, col = 0;
+    while (file && row < 200) { // 确保文件可读且没有超过数组的行数
+        file.get(map[row][col]); // 读取一个字符到数组中
+        if (file.eof()) break; // 如果到达文件末尾，退出循环
+
+        if (map[row][col] == '\n') { // 如果读取到换行符，移动到下一行
+            col = 0;
+        } else if (col < 199) { // 如果没有到达行的末尾，移动到下一个字符
+            col++;
+        } else { // 如果到达行的末尾，移动到下一行的开始
+            row++;
+            col = 0;
+        }
+    }
+
+    file.close(); // 关闭文件
+
+    //print the map
+    // for (int i = 0; i <= row; ++i) {
+    //     for (int j = 0; j < 200 && map[i][j] != '\0'; ++j) {
+    //         std::cout << map[i][j];
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+    auto start = std::chrono::high_resolution_clock::now();
+    robot.aStar_search();
+    auto end = std::chrono::high_resolution_clock::now();
+    controlRobot(robot);
+    std::chrono::duration<double> elapsed = end - start;
+
+    cout << endl << "Elapsed time: " << elapsed.count() << "s\n";
+
+    return 0;
 }
