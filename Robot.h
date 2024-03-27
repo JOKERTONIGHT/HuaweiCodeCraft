@@ -1,5 +1,5 @@
 #include "Good.h"
-#include <queue>
+#include <stack>
 
 class Robot
 {
@@ -7,7 +7,7 @@ public:
     int x, y, good_status;
     int status;
     Good *aim_good;
-    queue<int> path;
+    stack<int> path;
     Robot() : aim_good(nullptr) {}
     int A_Search();
     bool Is_Robot_in_Berth();

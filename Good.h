@@ -5,7 +5,7 @@ public:
     int time;
     int aim_robot;
     double weight;
-    Good() : time(20020), aim_robot(-1), weight(-1) {}
+    Good() : time(1001), aim_robot(-1), weight(-1) {}
     void operator=(Good &g)
     {
         x = g.x;

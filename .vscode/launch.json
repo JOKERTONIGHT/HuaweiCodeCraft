@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/learning/huaweiComp/Codes/HuaweiCodeCraft",
-      "program": "d:/learning/huaweiComp/Codes/HuaweiCodeCraft/build/Debug/outDebug",
+      "cwd": "d:/learning/huaweiComp/WindowsReleasev2.0/WindowsReleasev2.0/HuaweiCodeCraft",
+      "program": "d:/learning/huaweiComp/WindowsReleasev2.0/WindowsReleasev2.0/HuaweiCodeCraft/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
